@@ -1,0 +1,104 @@
+# File permissions với AI Agent
+version: 2.0
+policy: strict
+default_deny: true
+
+# =====================================================
+# AI AGENT PERMISSIONS
+# =====================================================
+ai_agent:
+  enabled: true
+  learning_enabled: true
+  memory_enabled: true
+  
+  sub_agents:
+    planner:
+      enabled: true
+      can_access_memory: true
+      can_save_memory: true
+      
+    researcher:
+      enabled: true
+      can_access_memory: true
+      can_access_documents: true
+      can_web_search: false  # Tạm thời tắt, có thể bật sau
+      
+    coder:
+      enabled: true
+      can_access_code_patterns: true
+      can_save_code_patterns: true
+      can_execute_sandbox: true
+      
+    reviewer:
+      enabled: true
+      can_access_all_content: true
+      can_save_reviews: true
+      
+    security:
+      enabled: true
+      can_scan_content: true
+      can_block_operations: true
+      
+    learner:
+      enabled: true
+      can_learn_from_documents: true
+      can_learn_from_code: true
+      can_save_knowledge: true
+      
+  memory_limits:
+    max_documents: 1000
+    max_code_patterns: 500
+    max_knowledge_items: 2000
+    auto_cleanup: true
+    cleanup_threshold: 0.8
+    
+  learning_limits:
+    max_interactions_per_session: 100
+    auto_summarize: true
+    summary_interval: 10
+
+# =====================================================
+# SANDBOX FOR CODE LEARNING
+# =====================================================
+sandbox:
+  enabled: true
+  isolated: true
+  auto_purge: true
+  max_execution_time: 30
+  allowed_operations:
+    - file_read
+    - file_write
+    - code_execution
+  denied_operations:
+    - network_access
+    - system_access
+    - external_api_calls
+
+# =====================================================
+# TESTING & SELF-IMPROVEMENT
+# =====================================================
+self_improvement:
+  enabled: true
+  auto_testing: true
+  test_cases_per_feature: 3
+  improvement_suggestions: true
+  require_human_confirmation: true
+  
+  testing_framework:
+    unit_tests: true
+    integration_tests: true
+    performance_tests: false
+    security_tests: true
+    
+  improvement_areas:
+    - code_quality
+    - performance
+    - security
+    - user_experience
+    - memory_usage
+
+# =====================================================
+# KEEP EXISTING PERMISSIONS
+# =====================================================
+# Giữ nguyên các permissions cũ từ file permissions.yaml
+# ... (copy toàn bộ nội dung cũ vào đây)

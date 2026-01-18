@@ -1,0 +1,226 @@
+#permissions.yaml (MASTER)
+version: 1.0
+policy: strict
+default_deny: true
+
+# ======================================================
+# LLM MODELS (OLLAMA)
+# ======================================================
+llm:
+  provider: ollama
+  allowed_models:
+    reasoning:
+      - mixtral:latest
+      - qwen2.5:14b
+      - llama3.1:latest
+
+    chat:
+      - llama3:8b
+      - qwen2.5:7b
+      - mistral:latest
+
+    coding:
+      - deepseek-coder:6.7b
+
+    embedding: []   # chưa cấp embedding model
+
+# ======================================================
+# AGENT PERMISSIONS
+# ======================================================
+agents:
+
+  orchestrator:
+    role: system_controller
+    llm:
+      allowed: true
+      models:
+        - mixtral:latest
+        - qwen2.5:14b
+        - llama3.1:latest
+    tools:
+      - web_search
+      - memory_read
+      - memory_write
+      - agent_dispatch
+    filesystem:
+      read:
+        - config/
+        - reports/
+        - logs/
+      write:
+        - logs/
+        - reports/
+      deny:
+        - core_ai/
+    network:
+      web: true
+      domains:
+        - "*"
+    can_call_agents: true
+
+  planner:
+    role: task_planner
+    llm:
+      allowed: false
+    tools: []
+    filesystem:
+      read: []
+      write: []
+      deny:
+        - "*"
+    network:
+      web: false
+    can_call_agents: false
+
+  research:
+    role: information_gathering
+    llm:
+      allowed: true
+      models:
+        - qwen2.5:14b
+        - llama3.1:latest
+    tools:
+      - web_search
+    filesystem:
+      read:
+        - reports/
+      write:
+        - reports/
+      deny:
+        - core_ai/
+        - sandbox/
+    network:
+      web: true
+      domains:
+        - github.com
+        - raw.githubusercontent.com
+        - docs.python.org
+        - arxiv.org
+    can_call_agents: false
+
+  coding:
+    role: code_writer
+    llm:
+      allowed: true
+      models:
+        - deepseek-coder:6.7b
+    tools:
+      - code_executor
+    filesystem:
+      read:
+        - chat_module/
+        - tools/
+        - agents/
+        - config/
+      write:
+        - sandbox/
+      deny:
+        - core_ai/
+        - api/
+    network:
+      web: false
+    can_call_agents: false
+
+  reviewer:
+    role: quality_reviewer
+    llm:
+      allowed: true
+      models:
+        - mixtral:latest
+        - llama3:8b
+    tools: []
+    filesystem:
+      read:
+        - "*"
+      write: []
+      deny:
+        - core_ai/
+    network:
+      web: false
+    can_call_agents: false
+
+  security:
+    role: security_guard
+    llm:
+      allowed: true
+      models:
+        - mixtral:latest
+    tools:
+      - permission_audit
+    filesystem:
+      read:
+        - config/
+        - logs/
+      write:
+        - reports/
+      deny:
+        - core_ai/
+    network:
+      web: false
+    can_call_agents: false
+
+# ======================================================
+# TOOLS
+# ======================================================
+tools:
+
+  web_search:
+    allowed_agents:
+      - orchestrator
+      - research
+    rate_limit:
+      requests_per_minute: 10
+
+  code_executor:
+    allowed_agents:
+      - coding
+    sandbox_only: true
+    allow_network: false
+    allow_filesystem:
+      write:
+        - sandbox/
+      read:
+        - sandbox/
+
+  memory_read:
+    allowed_agents:
+      - orchestrator
+
+  memory_write:
+    allowed_agents:
+      - orchestrator
+    confirmation_required: true
+
+  agent_dispatch:
+    allowed_agents:
+      - orchestrator
+
+  permission_audit:
+    allowed_agents:
+      - security
+
+# ======================================================
+# FILESYSTEM GLOBAL RULES
+# ======================================================
+filesystem:
+  core_ai:
+    access: none
+
+  sandbox:
+    access: isolated
+    auto_purge: true
+
+# ======================================================
+# NETWORK GLOBAL RULES
+# ======================================================
+network:
+  default: deny
+  allowed_agents:
+    orchestrator:
+      web: true
+    research:
+      web: true
+  blocked:
+    - upload
+    - arbitrary_api
+    - private_endpoint

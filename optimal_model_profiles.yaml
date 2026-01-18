@@ -1,0 +1,15 @@
+chat:
+  fallback: llama3:8b
+  max_tokens: 4096
+  primary: qwen2.5:14b
+  timeout: 45
+coding:
+  fallback: llama3:8b
+  max_tokens: 8192
+  primary: deepseek-coder:6.7b
+  timeout: 60
+research:
+  fallback: llama3:8b
+  max_tokens: 8192
+  primary: qwen2.5:14b
+  timeout: 60

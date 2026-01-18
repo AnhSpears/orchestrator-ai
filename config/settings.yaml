@@ -1,0 +1,28 @@
+system:
+  name: "ORCHESTRATOR"
+  version: "1.0.0"
+  mode: "local"
+  default_language: "vi"
+
+paths:
+  core_ai: "./core_ai"
+  chat_module: "./chat_module"
+  memory: "./memory"
+  tools: "./tools"
+  agents: "./agents"
+  sandbox: "./sandbox"
+  config: "./config"
+  logs: "./logs"
+  reports: "./reports"
+
+logging:
+  level: "INFO"
+  file: "logs/system.log"
+  max_size_mb: 10
+  backup_count: 5
+
+security:
+  default_deny: true
+  sandbox_enabled: true
+  auto_purge_sandbox: true
+  max_execution_time: 30

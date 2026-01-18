@@ -1,0 +1,88 @@
+# Profiles for different LLM tasks
+profiles:
+  chat:
+    models:
+      - qwen2.5:14b
+      - qwen2.5:7b
+      - mixtral:latest
+    parameters:
+      temperature: 0.7
+      max_tokens: 2048
+      top_p: 0.9
+      repeat_penalty: 1.1
+
+  reasoning:
+    models:
+      - qwen2.5:14b
+      - mixtral:latest
+      
+      - llama3.1:latest
+    parameters:
+      temperature: 0.3
+      max_tokens: 4096
+      top_p: 0.8
+      repeat_penalty: 1.2
+
+  coding:
+    models:
+      - deepseek-coder:6.7b
+      - codellama:7b
+      - llama3:8b
+    parameters:
+      temperature: 0.2
+      max_tokens: 8192
+      top_p: 0.7
+      repeat_penalty: 1.1
+
+  research:
+    models:
+      - qwen2.5:14b
+      - mixtral:latest
+      
+    parameters:
+      temperature: 0.4
+      max_tokens: 8192
+      top_p: 0.85
+
+  web_search:
+    models:
+      - qwen2.5:14b
+      - mixtral:latest
+      
+    parameters:
+      temperature: 0.5
+      max_tokens: 4096
+      top_p: 0.9
+
+# Response quality settings
+response_quality:
+  min_length: 200
+  preferred_length: 500
+  require_structure: true
+  code_blocks: true
+  
+# Model capabilities
+capabilities:
+  llama3:8b:
+    context: 8192
+    coding: good
+    reasoning: good
+    languages: [en, vi, es, fr, de]
+    
+  mixtral:latest:
+    context: 32768
+    coding: excellent
+    reasoning: excellent
+    languages: [en, vi, es, fr, de, it]
+    
+  deepseek-coder:6.7b:
+    context: 16384
+    coding: excellent
+    reasoning: good
+    languages: [en, code]
+    
+  qwen2.5:14b:
+    context: 32768
+    coding: very_good
+    reasoning: excellent
+    languages: [en, zh, vi, ja, ko]

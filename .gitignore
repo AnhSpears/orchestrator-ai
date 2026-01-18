@@ -1,0 +1,42 @@
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ===== Virtual Environment =====
+.venv/
+venv/
+env/
+
+# ===== Logs & Runtime =====
+logs/
+*.log
+
+# ===== Memory runtime data (ignore) =====
+memory/short_term/
+memory/long_term/
+memory/vector_store/
+memory/__pycache__/
+memory/memory_index.json
+
+# ===== Documents & OCR data =====
+documents/
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+*.txt
+*.json
+
+# ===== Reports / Results =====
+reports/
+model_test_results.txt
+
+# ===== IDE =====
+.vscode/
+.idea/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db

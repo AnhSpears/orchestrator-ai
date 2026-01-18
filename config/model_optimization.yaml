@@ -1,0 +1,46 @@
+# Cấu hình tối ưu model dựa trên test
+model_performance:
+  qwen2.5:14b:
+    best_for: ['chat', 'research', 'web_search', 'reasoning']
+    timeout: 30
+    max_tokens: 3072
+    quality: excellent
+    language_support: ['vi', 'en', 'zh']
+    
+  llama3:8b:
+    best_for: ['chat', 'general']
+    timeout: 20
+    max_tokens: 2048
+    quality: good
+    language_support: ['en', 'es', 'fr', 'de']
+    
+  deepseek-coder:6.7b:
+    best_for: ['coding']
+    timeout: 25
+    max_tokens: 4096
+    quality: excellent
+    language_support: ['code']
+    
+  mixtral:latest:
+    best_for: ['reasoning', 'complex_analysis']
+    timeout: 60
+    max_tokens: 4096
+    quality: excellent
+    language_support: ['en', 'fr', 'it', 'de', 'es']
+
+# Chiến lược fallback
+fallback_strategy:
+  coding:
+    primary: deepseek-coder:6.7b
+    secondary: llama3:8b
+    tertiary: qwen2.5:14b
+    
+  chat:
+    primary: qwen2.5:14b
+    secondary: llama3:8b
+    tertiary: mixtral:latest
+    
+  reasoning:
+    primary: qwen2.5:14b  # Ưu tiên hơn mixtral vì nhanh hơn
+    secondary: mixtral:latest
+    tertiary: llama3:8b
