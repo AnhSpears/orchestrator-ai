@@ -1,0 +1,282 @@
+INSTRUCTIONS – DỰ ÁN THIẾT KẾ & PHÁT TRIỂN HỆ THỐNG AI
+
+
+
+
+    1. MỤC TIÊU DỰ ÁN
+        Xây dựng một hệ thống AI tổng quát, an toàn, mở rộng được, hoạt động ưu tiên local-first, có khả năng:
+            • Chat ngôn ngữ tự nhiên (đa ngôn ngữ, ưu tiên tiếng Việt)
+            • Hiểu ngữ cảnh dài hạn
+            • Suy luận – lập kế hoạch – phân tích
+            • Tìm kiếm tài liệu trên web
+            • Nhận thức thời gian thực
+            • Tự học từ mã nguồn mở một cách an toàn
+            • Mở rộng bằng plugin / agent mà không phá vỡ core
+        Mục tiêu chính của bạn là:
+            1. An toàn hệ thống
+            2. Ổn định vận hành
+            3. Độ chính xác và kiểm soát
+            4. Trải nghiệm chat tự nhiên
+            5. Khả năng mở rộng trong tương lai
+        
+
+    2. NGUYÊN TẮC CỐT LÕI (BẮT BUỘC TUÂN THỦ)
+
+        2.1 Nguyên tắc kiến trúc
+            • Separation of Concerns
+            • Loose Coupling – High Cohesion
+            • **Core AI là bất biến **(read-only)
+            • Mọi mở rộng đi qua interface / config
+            • Không hard-code logic nghiệp vụ vào lõi
+            • Tôn trọng nguyên tắc Single Responsibility
+            • Giữ vai trò điều phối trung tâm
+            • Bảo vệ an toàn hệ thống
+            • Ghi log mọi hành vi bất thường
+            • Tôn trọng privacy người dùng
+            • Chỉ dùng code từ nguồn đáng tin cậy
+            • Tuân thủ license mã nguồn mở
+
+        2.2 Nguyên tắc phát triển
+            • Không viết code demo
+            • Không vá chắp từng mảnh
+            • Mỗi lần sửa → xuất code hoàn chỉnh
+            • Ưu tiên ổn định hơn tính năng
+            • Mọi hành vi AI phải kiểm soát được
+
+
+    3. KIẾN TRÚC TỔNG THỂ
+
+        User / API / CLI/ Desktopapp/app mobile
+
+                |
+                V
+
+        Chat & Input Layer
+
+                |
+                V
+
+        Intent / Task Router
+
+                |
+                V
+
+        Core AI (Reasoning + Orchestrator)
+
+                |
+                V
+
+        LLM Dispatcher
+
+                |
+                V
+
+        Tools / Memory / RAG / Agents
+
+                |
+                V
+
+        Response Generator
+
+
+    4. CẤU TRÚC THƯ MỤC CHUẨN (KHÓA CỐ ĐỊNH)
+        project_root/
+        │
+        ├── core_ai/ 
+        │   ├── brain.py
+        │   ├── reasoning_engine.py
+        │   ├── llm_dispatcher.py
+        │   └── __init__.py
+        │
+        ├── chat_module/
+        │   ├── language_detect.py
+        │   ├── intent_classifier.py
+        │   ├── chat_router.py
+        │   └── response_formatter.py
+        │
+        ├── memory/
+        │   ├── short_term.py
+        │   ├── long_term.py
+        │   └── vector_store.py
+        │
+        ├── tools/
+        │   ├── web_search.py
+        │   ├── file_reader.py
+        │   ├── code_executor.py
+        │
+        ├── data_learning/
+        │   ├── documents/
+        │   ├── embeddings/
+        │   └── ingest.py
+        │
+        ├── agents/
+        │ ├── base_agent.py
+        │ ├── planner_agent.py
+        │ ├── research_agent.py
+        │ └── reviewer_agent.py
+        │
+        ├── sandbox/
+        ├── api/
+        │   ├── cli.py
+        │   └── server.py
+        │
+        ├── config/
+        │   ├── settings.yaml
+        │   ├── llm_profiles.yaml
+        │   └── permissions.yaml
+        │
+        ├── logs/
+        ├── reports/
+        ├── requirements.txt
+        └── main.py
+
+
+    5. CHIẾN LƯỢC SỬ DỤNG LLM
+
+        5.1 Phân loại LLM theo nhiệm vụ
+
+            • Chat: Instruction / Chat LLM
+            • Suy luận: Reasoning LLM
+            • Tóm tắt: Lightweight LLM
+            • Embedding: Embedding-only
+            
+        5.2 Quy tắc gọi LLM
+
+            • UI không gọi LLM trực tiếp
+            • Mọi request phải đi qua llm_dispatcher
+            • Mỗi task phải khai báo rõ mục tiêu, context, độ chính xác, mức an toàn
+            • Chọn LLM phù hợp theo task
+            • Giới hạn context length theo khả năng LLM
+            • Ưu tiên LLM local-first nếu có thể
+        5.3 Quản lý chi phí & hiệu năng
+            • Ưu tiên LLM nhẹ cho tác vụ đơn giản
+            • Dùng LLM mạnh cho suy luận phức tạp
+            • Giới hạn tần suất gọi LLM
+            • Cache kết quả thường dùng
+            • Giám sát chi phí định kỳ
+
+
+    6. LUỒNG XỬ LÝ CHAT
+        1. Nhận input
+        2. Phát hiện ngôn ngữ
+        3. Phân loại intent
+        4. Router chọn task
+        5. Core AI lập kế hoạch
+        6. Gọi LLM phù hợp
+        7. (Nếu cần) web search / RAG / agent
+        8. Tổng hợp kết quả
+        9. Trả lời tự nhiên, không lộ prompt
+        Không được bỏ bước. Không được đảo thứ tự.
+
+
+    7. WEB SEARCH & THỜI GIAN THỰC
+        • Chỉ sử dụng web_search tool được kiểm soát
+        • Không scrape bừa
+        • Ưu tiên docs chính thức, RFC, blog kỹ thuật uy tín, GitHub repo public
+        • AI luôn biết thời gian hiện tại
+        • Không suy đoán dữ liệu mới nếu chưa truy vấn
+        • Mọi thông tin thời gian thực phải:
+        • có nguồn
+        • có timestamp
+
+
+    8. TRÍ NHỚ & RAG
+        • Short-term memory: context phiên chat
+        • Long-term memory: tri thức đã xác nhận
+        • Vector memory: tài liệu / kiến thức
+
+        Không tự động ghi nhớ nếu chưa được xác nhận
+
+
+    9. TỰ HỌC CODE & MÃ NGUỒN MỞ
+        • AI được phép:
+            - Đọc – hiểu – phân tích – so sánh code
+            - Học pattern, kiến trúc, thuật toán
+            - Chỉ chấp nhận repo GitHub public
+            - License rõ ràng (MIT, Apache-2.0, BSD)
+            - Có README và commit history
+        • AI không được phép:
+            - Học code có license hạn chế (GPL, AGPL, LGPL)
+            - Học code thương mại, đóng, bí mật
+            - Sao chép code nguyên bản
+            - Ghi đè core_ai
+
+
+    10. NÂNG CẤP AN TOÀN (SAFE EVOLUTION)
+
+        10.1 Cấm tuyệt đối
+
+            • Chèn code học được vào chương trình chính
+            • Ghi đè core_ai
+            • Auto-merge code bên ngoài
+        10.2 Quy trình nâng cấp bắt buộc
+            Phân tích → Trích xuất ý tưởng → Viết lại logic nội bộ → Sandbox → Test độc lập → Đề xuất (chờ xác nhận)
+
+
+    11. SANDBOX & BẢO MẬT
+        • Code học được chỉ chạy trong sandbox
+        • Không quyền:
+        • ghi core
+        • truy cập credential
+        • truy cập hệ thống
+        • Giới hạn tài nguyên
+
+
+    12. PLUGIN / EXTENSION
+        • Core AI là read-only
+        • Mọi mở rộng:
+        • đăng ký qua config
+        • có thể tháo rời
+        • không phụ thuộc lẫn nhau
+
+
+    13. MULTI-AGENT SYSTEM
+        • Agent độc lập, vai trò rõ ràng
+        • Quyền hạn riêng
+        • Không tự gọi agent khác. Ví dụ:
+        • Planner Agent
+        • Research Agent
+        • Coding Agent
+        • Reviewer Agent
+        • Security Agent
+        • Chỉ core_ai/orchestrator được điều phối agent
+
+
+    14. LOGGING & KIỂM SOÁT
+        • INFO: luồng chính
+        • DEBUG: prompt / response
+        • ERROR: exception + fallback
+    
+
+
+    15. NGUYÊN TẮC HÀNH VI CỦA AI
+        AI PHẢI:
+            - Giải thích trước khi đề xuất nâng cấp
+            - Hỏi xác nhận trước khi thay đổi
+            - Ưu tiên ổn định hơn tính năng
+            - Ghi log mọi hành vi bất thường
+            
+        AI KHÔNG ĐƯỢC:
+            - Tự cải tiến không kiểm soát
+            - Tự áp dụng code học được
+            - Vượt quyền sandbox
+            - Truy cập credential / hệ thống
+            - Vi phạm privacy người dùng
+            - Dùng code không rõ nguồn
+            - Vi phạm license mã nguồn mở
+            
+
+    16. DEFINITION OF DONE
+        • Hệ thống được xem là hoàn thiện khi:
+        • Chat tự nhiên
+        • Có web search kiểm soát
+        • Nhận thức thời gian thực
+        • Có sandbox học code
+        • Plugin & multi-agent hoạt động
+        • Core AI không bị chỉnh sửa
+        • Chạy local ổn định 100%
+
+Lưu ý:
+** Tài liệu này là luật cao nhất của dự án.
+
+** Mọi code, agent, plugin, nâng cấp đều phải tuân thủ tuyệt đối.
